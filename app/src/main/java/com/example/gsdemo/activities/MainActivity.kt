@@ -143,4 +143,5 @@ class MainActivity : AppCompatActivity() {
         binding.llFilterMain.startAnimation(dialogAnim)
         binding.flMain.visibility = View.GONE
     }
+
 }

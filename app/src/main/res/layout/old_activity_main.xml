@@ -26,11 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/purple_500"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvTitle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/app_name"
-            android:elevation="5dp"
             app:titleTextColor="@color/white">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -42,112 +45,104 @@
                 android:src="@drawable/filter_white" />
         </androidx.appcompat.widget.Toolbar>
 
-        <ScrollView
-            android:id="@+id/scrollview"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/arial_mt"
+            android:text="@string/title"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/cvImage"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}"
+            app:cardElevation="4dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                app:imageUrl="@{mainViewModel.apoDetailObs.url}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shadow"
+                android:gravity="bottom"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="10dp"
-                    android:fontFamily="@font/arial_mt"
-                    android:text="@string/title"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}" />
-
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cvImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}"
-                    app:cardElevation="4dp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:scaleType="fitXY"
-                        app:imageUrl="@{mainViewModel.apoDetailObs.url}" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_gravity="bottom"
-                        android:background="@drawable/shadow"
-                        android:gravity="bottom"
-                        android:orientation="vertical">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            android:gravity="bottom"
-                            android:paddingLeft="3dp"
-                            android:paddingTop="3dp"
-                            android:paddingRight="3dp"
-                            android:text="@{mainViewModel.apoDetailObs.title}"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            tools:text="@string/app_name" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            android:gravity="top"
-                            android:paddingLeft="3dp"
-                            android:paddingRight="3dp"
-                            android:paddingBottom="3dp"
-                            android:text="@{mainViewModel.apoDetailObs.date}"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            tools:text="@string/app_name" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:gravity="bottom"
+                    android:paddingLeft="3dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="3dp"
+                    android:text="@{mainViewModel.apoDetailObs.title}"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    tools:text="@string/app_name" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvListTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginRight="10dp"
-                    android:fontFamily="@font/arial_mt"
-                    android:text="@string/list_title"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:adapter="@{mainViewModel.getAPODListAdapter()}"
-                    android:orientation="horizontal"
-                    android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:gravity="top"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="@{mainViewModel.apoDetailObs.date}"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="@string/app_name" />
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        </ScrollView>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvListTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="10dp"
+            android:fontFamily="@font/arial_mt"
+            android:text="@string/list_title"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cvImage" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:adapter="@{mainViewModel.getAPODListAdapter()}"
+            android:orientation="horizontal"
+            android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/tvListTitle" />
 
         <FrameLayout
             android:id="@+id/flMain"
@@ -155,7 +150,9 @@
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"
             android:background="@color/transparent_black"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar">
 
             <LinearLayout
                 android:id="@+id/llFilterMain"
@@ -173,8 +170,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:baselineAligned="false"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -270,5 +267,7 @@
 
             </LinearLayout>
         </FrameLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
