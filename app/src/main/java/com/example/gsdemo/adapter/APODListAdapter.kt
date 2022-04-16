@@ -41,7 +41,6 @@ class APODListAdapter(private val mainViewModel: MainViewModel) :
     }
 
     override fun getItemCount(): Int {
-        Log.d("Item", apodList[0].isFav.toString())
         return apodList.size
     }
 

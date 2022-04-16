@@ -61,7 +61,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     /**
-     * The getTodayImage method, to get today's image
+     * The callTodayAPODAPI method, to get today's image
      */
     fun callTodayAPODAPI(
         callback: APICallback
@@ -227,7 +227,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         it.isFav = true
                         (view as AppCompatImageView).setBackgroundResource(R.drawable.ic_fav)
                     }
-                    Log.d("Item1", it.isFav.toString())
                 }
                 CommonUtils.saveObjToPref(it, AppConstants.APOD_LIST)
                 notifyDataChange(it)
