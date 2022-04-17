@@ -15,8 +15,6 @@ import com.example.gsdemo.utils.CommonUtils
 import com.example.gsdemo.utils.CommonUtils.getTodayAPODData
 import com.example.gsdemo.utils.snackbar
 import com.example.gsdemo.viewmodel.MainViewModel
-import okhttp3.ResponseBody
-import org.json.JSONObject
 
 /**
  * The MainActivity class, to show today's image and filtered list based on date range
@@ -59,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStop() {
         super.onStop()
-        CommonUtils.saveObjToPref(
+        CommonUtils.saveObjIntoPref(
             mainViewModel.getAPODListAdapter().getAPODList(),
             AppConstants.APOD_LIST
         )

@@ -27,9 +27,9 @@ object CommonUtils {
         SimpleDateFormat(AppConstants.DATE_FORMAT).format(date).toString()
 
     /**
-     * The saveObjToPref method, to save object into preference
+     * The saveObjIntoPref method, to save object into preference
      */
-    fun <T> saveObjToPref(data: T, prefName: String) {
+    fun <T> saveObjIntoPref(data: T, prefName: String) {
         val gson = Gson()
         val json: String = gson.toJson(data)
         MyApplication.prefHelper!![prefName] = json

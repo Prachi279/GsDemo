@@ -17,7 +17,6 @@ import com.example.gsdemo.utils.AppConstants
 import com.example.gsdemo.utils.CommonUtils
 import com.example.gsdemo.utils.CommonUtils.getFormattedDate
 import com.example.gsdemo.utils.snackbar
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -79,7 +78,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 isProgressDialogVisible.set(false)
                 if (response.isSuccessful) {
                     val apodRes = response.body()
-                    CommonUtils.saveObjToPref(apodRes!!, AppConstants.TODAY_APOD_DATA)
+                    CommonUtils.saveObjIntoPref(apodRes!!, AppConstants.TODAY_APOD_DATA)
                     apoDetailObs.set(apodRes)
                 } else {
                     callback.apiError(response.errorBody()!!)
@@ -115,7 +114,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     if (response.isSuccessful) {
                         val apodRes = response.body()
                         if (apodRes?.size!! > 0) {
-                            CommonUtils.saveObjToPref(apodRes, AppConstants.APOD_LIST)
+                            CommonUtils.saveObjIntoPref(apodRes, AppConstants.APOD_LIST)
                             notifyDataChange(apodRes)
                         } else {
                             isRangeListAvailable.set(false)
