@@ -19,6 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".activities.MainActivity">
 
         <androidx.appcompat.widget.Toolbar
@@ -80,7 +81,7 @@
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/arial_mt"
                     android:text="@string/title"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textSize="15sp"
                     android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}" />
 
@@ -137,9 +138,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/arial_mt"
+                            android:paddingLeft="3dp"
                             android:paddingTop="3dp"
                             android:paddingRight="3dp"
-                            android:paddingLeft="3dp"
                             android:paddingBottom="5dp"
                             android:text="@{mainViewModel.apoDetailObs.date}"
                             android:textColor="@color/white"
@@ -157,7 +158,7 @@
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/arial_mt"
                     android:text="@string/list_title"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textSize="15sp"
                     android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}" />
 
@@ -188,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@color/white"
+                android:background="@color/dialog_background"
                 android:clickable="true"
                 android:elevation="20dp"
                 android:orientation="vertical"
@@ -219,11 +220,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="@string/start_date"
-                        app:boxBackgroundColor="@color/white"
+                        android:textColorHint="@color/text_color"
                         app:boxBackgroundMode="outline"
                         app:boxCornerRadiusBottomEnd="5dp"
                         app:boxCornerRadiusBottomStart="5dp"
-                        app:hintTextColor="@color/black">
+                        app:hintTextColor="@color/text_color">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etStartDate"
@@ -235,7 +236,7 @@
                             android:focusable="false"
                             android:fontFamily="@font/arial_mt"
                             android:onClick="@{(v)->mainViewModel.openDatePicker(v)}"
-                            android:textColor="@color/black"
+                            android:textColor="@color/text_color"
                             android:textSize="12sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -246,12 +247,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
+                        android:textColorHint="@color/text_color"
                         android:hint="@string/end_date"
                         app:boxBackgroundMode="outline"
                         app:boxCornerRadiusBottomEnd="5dp"
                         app:boxCornerRadiusBottomStart="5dp"
-                        app:boxStrokeColor="@color/purple_500"
-                        app:hintTextColor="@color/black">
+                        app:boxStrokeColor="@color/text_color"
+                        app:hintTextColor="@color/text_color">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEndDate"
@@ -263,7 +265,7 @@
                             android:focusable="false"
                             android:fontFamily="@font/arial_mt"
                             android:onClick="@{(v)->mainViewModel.openDatePicker(v)}"
-                            android:textColor="@color/black"
+                            android:textColor="@color/text_color"
                             android:textSize="12sp" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -292,7 +294,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:alpha="@{(mainViewModel.startDateObs!=null &amp;&amp; mainViewModel.endDateObs!=null)  &amp;&amp; !mainViewModel.isProgressDialogVisible?1f:0.3f}"
-                        android:background="@color/purple_500"
+                        android:background="@color/apply_button"
                         android:enabled="@{mainViewModel.startDateObs!=null &amp;&amp; mainViewModel.endDateObs!=null }"
                         android:fontFamily="@font/poppins_semi_bold"
                         android:onClick="@{(v)->mainViewModel.callAPODListAPI(v)}"

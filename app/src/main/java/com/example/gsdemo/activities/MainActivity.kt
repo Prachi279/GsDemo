@@ -1,10 +1,13 @@
 package com.example.gsdemo.activities
 
+import android.app.Activity
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.gsdemo.R
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setInitialData()
+
     }
 
     override fun onStop() {
@@ -113,7 +117,9 @@ class MainActivity : AppCompatActivity() {
             }
             showOfflineAPODList()
             if ((todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) ||
-                (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)?.isEmpty() == true)) {
+                (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
+                    ?.isEmpty() == true)
+            ) {
                 activity.snackbar(binding.root, getString(R.string.no_data_error))
             }
         }
@@ -168,4 +174,8 @@ class MainActivity : AppCompatActivity() {
         binding.flMain.visibility = View.GONE
     }
 
+    fun isDarkTheme(activity: Activity): Boolean {
+        return activity.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    }
 }
