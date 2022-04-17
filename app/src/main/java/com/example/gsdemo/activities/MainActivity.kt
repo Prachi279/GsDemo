@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * The doWhenOffline method, to manage (list and today's data) views when network connection available
+     * The doWhenOffline method, to manage (list and today's data) views when network connection is not available
      */
     private fun doWhenOffline(todayAPODObj: APODDetail?) {
         val apodOfflineList = CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * The doWhenOnline method, to manage (list and today's data) views when app is offline
+     * The doWhenOnline method, to manage (list and today's data) views when network connection is available
      */
     private fun doWhenOnline(todayAPODObj: APODDetail?) {
         todayAPODObj?.let {
