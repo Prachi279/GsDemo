@@ -11,6 +11,8 @@ import com.example.gsdemo.utils.PreferenceHelper.get
 import com.example.gsdemo.utils.PreferenceHelper.set
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -90,5 +92,20 @@ object CommonUtils {
         }
 
         return false
+    }
+
+    /**
+     * The showError method, to show error message to the user
+     */
+    fun showError(response: Any): String? {
+        val errorJson = JSONObject((response as ResponseBody).string())
+        var errorMessage: String? = ""
+        if (errorJson.has("error")) {
+            val jsonObj = JSONObject((errorJson.getString("error")).toString())
+            errorMessage = jsonObj.getString("message")
+        } else if (errorJson.has("msg")) {
+            errorMessage = errorJson.getString("msg")
+        }
+        return errorMessage
     }
 }

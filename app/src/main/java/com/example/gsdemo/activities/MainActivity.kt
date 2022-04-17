@@ -1,8 +1,6 @@
 package com.example.gsdemo.activities
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -18,6 +16,8 @@ import com.example.gsdemo.utils.CommonUtils
 import com.example.gsdemo.utils.CommonUtils.getTodayAPODData
 import com.example.gsdemo.utils.snackbar
 import com.example.gsdemo.viewmodel.MainViewModel
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Response
 
 /**
@@ -53,7 +53,18 @@ class MainActivity : AppCompatActivity() {
 
         setUpToolbar()
         setUpListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
         setInitialData()
+    }
+    override fun onStop() {
+        super.onStop()
+        CommonUtils.saveObjToPref(
+            mainViewModel.getAPODListAdapter().getAPODList(),
+            AppConstants.APOD_LIST
+        )
     }
 
     /**
@@ -64,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * The setUpListener method, to hide filter dialog on framelayout click
+     * The setUpListener method, to hide filter dialog on FrameLayout click
      */
     private fun setUpListener() {
         binding.flMain.setOnClickListener {
@@ -79,6 +90,9 @@ class MainActivity : AppCompatActivity() {
                 openDialog()
             }
         }
+        binding.ivClose.setOnClickListener {
+            closeDialog()
+        }
     }
 
     /**
@@ -88,7 +102,12 @@ class MainActivity : AppCompatActivity() {
         if (CommonUtils.isOnline(activity)) {
             mainViewModel.callTodayAPODAPI(object : APICallback {
                 override fun apiError(response: Any) {
-                    activity.snackbar(binding.root, (response as Response<*>).message())
+                    activity.snackbar(
+                        binding.root,
+                        getString(R.string.apod_fetch_image_error) + "" + CommonUtils.showError(
+                            response
+                        ).toString()
+                    )
                 }
             })
             showOfflineAPODList()
@@ -98,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.apoDetailObs.set(it)
             }
             showOfflineAPODList()
-            if (data == null && showOfflineAPODList() == null) {
+            if (data == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) {
                 activity.snackbar(binding.root, getString(R.string.no_data_error))
             }
 
@@ -106,16 +125,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * The showError method, to show error message to the user
+     */
+    private fun showError(response: Any) {
+        val errorJson = JSONObject((response as ResponseBody).string())
+        var errorMessage: String? = ""
+        if (errorJson.has("error")) {
+            val jsonObj = JSONObject((errorJson.getString("error")).toString())
+            errorMessage = jsonObj.getString("message")
+        } else if (errorJson.has("msg")) {
+            errorMessage = errorJson.getString("msg")
+        }
+
+    }
+
+    /**
      * The showOfflineAPODList method, to show filtered list in offline
      */
-    private fun showOfflineAPODList(): List<APODDetail>? {
-        val offlineList = CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
-        offlineList
-            ?.let {
-                mainViewModel.notifyDataChange(it)
-                mainViewModel.isRangeListAvailable.set(true)
-            }
-        return offlineList
+    private fun showOfflineAPODList() {
+        mainViewModel.notifyDataChange()
     }
 
     /**

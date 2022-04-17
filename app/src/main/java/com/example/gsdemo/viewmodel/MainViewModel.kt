@@ -1,11 +1,10 @@
 package com.example.gsdemo.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.DatePickerDialog
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -18,6 +17,7 @@ import com.example.gsdemo.utils.AppConstants
 import com.example.gsdemo.utils.CommonUtils
 import com.example.gsdemo.utils.CommonUtils.getFormattedDate
 import com.example.gsdemo.utils.snackbar
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * The isProgressDialogVisibile, to show and hide progressbar based on conditions
      */
-    var isProgressDialogVisibile: ObservableBoolean = ObservableBoolean(false)
+    var isProgressDialogVisible: ObservableBoolean = ObservableBoolean(false)
 
     /**
      * The startDateObs, an observer to set start date for date filter
@@ -57,7 +57,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * The apodListAdapter , an adapter instance
      */
-    var apodListAdapter: APODListAdapter = APODListAdapter(this)
+    private var apodListAdapter: APODListAdapter = APODListAdapter(this)
 
 
     /**
@@ -66,6 +66,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun callTodayAPODAPI(
         callback: APICallback
     ) {
+        isProgressDialogVisible.set(true)
         val call = ProjectRepository.getInstance().callRetrofitBuilder()
             ?.getTodayImage(
                 generateQueryParams()
@@ -75,17 +76,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 call: Call<APODDetail>,
                 response: Response<APODDetail>
             ) {
+                isProgressDialogVisible.set(false)
                 if (response.isSuccessful) {
                     val apodRes = response.body()
                     CommonUtils.saveObjToPref(apodRes!!, AppConstants.TODAY_APOD_DATA)
                     apoDetailObs.set(apodRes)
                 } else {
-                    callback.apiError(response)
+                    callback.apiError(response.errorBody()!!)
                     apoDetailObs.set(null)
                 }
             }
 
             override fun onFailure(call: Call<APODDetail>, t: Throwable) {
+                isProgressDialogVisible.set(false)
                 apoDetailObs.set(null)
             }
         })
@@ -98,7 +101,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         view: View
     ) {
         if (CommonUtils.isOnline(view.context)) {
-            isProgressDialogVisibile.set(true)
+            isProgressDialogVisible.set(true)
             val call = ProjectRepository.getInstance().callRetrofitBuilder()
                 ?.getAPODList(
                     generateListQueryParams()
@@ -108,14 +111,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     call: Call<ArrayList<APODDetail>>,
                     response: Response<ArrayList<APODDetail>>
                 ) {
-                    isProgressDialogVisibile.set(false)
+                    isProgressDialogVisible.set(false)
                     if (response.isSuccessful) {
                         val apodRes = response.body()
                         if (apodRes?.size!! > 0) {
                             CommonUtils.saveObjToPref(apodRes, AppConstants.APOD_LIST)
-                            isRangeListAvailable.set(true)
-                            notifyDataChange(rangeList = apodRes)
-
+                            notifyDataChange(apodRes)
                         } else {
                             isRangeListAvailable.set(false)
                         }
@@ -124,14 +125,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         isRangeListAvailable.set(false)
                         view.context.snackbar(
                             view,
-                            response.message()
+                            CommonUtils.showError(response.errorBody()!!).toString()
                         )
                     }
                 }
 
                 override fun onFailure(call: Call<ArrayList<APODDetail>>, t: Throwable) {
                     isRangeListAvailable.set(false)
-                    isProgressDialogVisibile.set(false)
+                    isProgressDialogVisible.set(false)
                 }
             })
         } else {
@@ -207,29 +208,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * The notifyDataChange method, to set and notify adapter
      */
-    fun notifyDataChange(rangeList: List<APODDetail>) {
-        apodListAdapter.setAPODList(rangeList)
-        apodListAdapter.notifyDataSetChanged()
+    @SuppressLint("NotifyDataSetChanged")
+    fun notifyDataChange(
+        rangeList: List<APODDetail>? = CommonUtils.getArrayListFromPref(
+            AppConstants.APOD_LIST
+        )
+    ) {
+        rangeList
+            ?.let { it ->
+                if (it.isNotEmpty()) {
+                    apodListAdapter.setAPODList(it)
+                    isRangeListAvailable.set(true)
+                    apodListAdapter.notifyDataSetChanged()
+                } else {
+                    isRangeListAvailable.set(false)
+                }
+            }
+        if (rangeList == null) {
+            isRangeListAvailable.set(false)
+        }
     }
 
-    /**
-     * The manageFav method, to manage favourite list offline
-     */
-    fun manageFav(view: View, apodDetail: APODDetail) {
-        CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
-            ?.let { it ->
-                val obj = it.single { it.date == apodDetail.date }
-                obj.also {
-                    if (it.isFav) {
-                        it.isFav = false
-                        (view as AppCompatImageView).setBackgroundResource(R.drawable.ic_unfav)
-                    } else {
-                        it.isFav = true
-                        (view as AppCompatImageView).setBackgroundResource(R.drawable.ic_fav)
-                    }
-                }
-                CommonUtils.saveObjToPref(it, AppConstants.APOD_LIST)
-                notifyDataChange(it)
-            }
-    }
 }

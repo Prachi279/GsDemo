@@ -26,11 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/purple_500"
+            android:elevation="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/pbTopLinear"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/app_name"
-            android:elevation="5dp"
             app:titleTextColor="@color/white">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -42,6 +43,19 @@
                 android:src="@drawable/filter_white" />
         </androidx.appcompat.widget.Toolbar>
 
+        <ProgressBar
+            android:id="@+id/pbTopLinear"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:indeterminate="true"
+            android:theme="@style/LinearProgress"
+            android:visibility="@{mainViewModel.isProgressDialogVisible?View.VISIBLE:View.INVISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
         <ScrollView
             android:id="@+id/scrollview"
             android:layout_width="match_parent"
@@ -50,7 +64,7 @@
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/pbTopLinear">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,7 +81,7 @@
                     android:fontFamily="@font/arial_mt"
                     android:text="@string/title"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:visibility="@{mainViewModel.apoDetailObs!=null?View.VISIBLE:View.GONE}" />
 
 
@@ -99,9 +113,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_semi_bold"
-                            android:gravity="bottom"
                             android:paddingLeft="3dp"
-                            android:paddingTop="3dp"
                             android:paddingRight="3dp"
                             android:text="@{mainViewModel.apoDetailObs.title}"
                             android:textColor="@color/white"
@@ -111,11 +123,24 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semi_bold"
-                            android:gravity="top"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/arial_mt"
+                            android:maxLines="2"
                             android:paddingLeft="3dp"
                             android:paddingRight="3dp"
-                            android:paddingBottom="3dp"
+                            android:text="@{mainViewModel.apoDetailObs.explanation}"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            tools:text="@string/app_name" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/arial_mt"
+                            android:paddingTop="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingLeft="3dp"
+                            android:paddingBottom="5dp"
                             android:text="@{mainViewModel.apoDetailObs.date}"
                             android:textColor="@color/white"
                             android:textSize="12sp"
@@ -133,7 +158,7 @@
                     android:fontFamily="@font/arial_mt"
                     android:text="@string/list_title"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -163,18 +188,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/white"
+                android:clickable="true"
                 android:elevation="20dp"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
-                android:paddingTop="25dp"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="25dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/ic_cross" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:baselineAligned="false"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -246,7 +280,7 @@
                         android:layout_centerInParent="true"
                         android:elevation="10dp"
                         android:indeterminate="true"
-                        android:visibility="@{mainViewModel.isProgressDialogVisibile? View.VISIBLE : View.GONE}"
+                        android:visibility="@{mainViewModel.isProgressDialogVisible? View.VISIBLE : View.GONE}"
                         app:indicatorColor="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -256,7 +290,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
-                        android:alpha="@{(mainViewModel.startDateObs!=null &amp;&amp; mainViewModel.endDateObs!=null) ?1f:0.3f}"
+                        android:alpha="@{(mainViewModel.startDateObs!=null &amp;&amp; mainViewModel.endDateObs!=null)  &amp;&amp; !mainViewModel.isProgressDialogVisible?1f:0.3f}"
                         android:background="@color/purple_500"
                         android:enabled="@{mainViewModel.startDateObs!=null &amp;&amp; mainViewModel.endDateObs!=null }"
                         android:fontFamily="@font/poppins_semi_bold"

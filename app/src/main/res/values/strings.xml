@@ -5,8 +5,9 @@
     <string name="end_date">End Date</string>
     <string name="favourite_list">Favourite List</string>
     <string name="filter">Filter</string>
-    <string name="list_title">Astronomy details based on date range</string>
+    <string name="list_title">Astronomy details based on last selected date range</string>
     <string name="apply">APPLY</string>
     <string name="internet_error">Internet is not available, please check your internet connectivity and try again</string>
     <string name="no_data_error">No record found</string>
+    <string name="apod_fetch_image_error">App cannot able to fetch today\'s image,</string>
 </resources>
