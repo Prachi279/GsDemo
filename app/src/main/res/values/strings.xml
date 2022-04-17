@@ -9,5 +9,6 @@
     <string name="apply">APPLY</string>
     <string name="internet_error">Internet is not available, please check your internet connectivity and try again</string>
     <string name="no_data_error">No record found</string>
+    <string name="no_data_for_today">No record found for today\'s date</string>
     <string name="apod_fetch_image_error">App cannot able to fetch today\'s image,</string>
 </resources>

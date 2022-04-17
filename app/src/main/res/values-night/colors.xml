@@ -10,7 +10,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background">#A3000000</color>
     <color name="text_color">#FFFFFF</color>
-    <color name="dialog_background">#80000000</color>
+    <color name="dialog_background">#CE000000</color>
     <color name="apply_button">#39DDB7</color>
     <color name="mtrl_textinput_default_box_stroke_color">@color/apply_button</color>
 </resources>

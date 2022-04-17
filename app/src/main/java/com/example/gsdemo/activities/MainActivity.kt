@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.gsdemo.R
 import com.example.gsdemo.databinding.ActivityMainBinding
+import com.example.gsdemo.model.APODDetail
 import com.example.gsdemo.utils.APICallback
 import com.example.gsdemo.utils.AppConstants
 import com.example.gsdemo.utils.CommonUtils
@@ -20,7 +21,7 @@ import com.example.gsdemo.utils.snackbar
 import com.example.gsdemo.viewmodel.MainViewModel
 
 /**
- * The MainActivity class, to show today's image and filtered list based on date range
+ * The MainActivity class, to show today's image and filtered apod list based on date range
  */
 class MainActivity : AppCompatActivity() {
     /**
@@ -102,27 +103,47 @@ class MainActivity : AppCompatActivity() {
     private fun setInitialData() {
         val todayAPODObj = getTodayAPODData()
         if (CommonUtils.isOnline(activity)) {
-            todayAPODObj?.let {
-                if (it.date == CommonUtils.getFormattedDate()) {
-                    mainViewModel.apoDetailObs.set(todayAPODObj)
-                } else {
-                    callTodayAPODAPI()
-                }
-            } ?: callTodayAPODAPI()
-
-            showOfflineAPODList()
+            doWhenOnline(todayAPODObj)
         } else {
-            todayAPODObj.let {
+            doWhenOffline(todayAPODObj)
+        }
+    }
+
+    /**
+     * The doWhenOffline method, to manage (list and today's data) views when network connection available
+     */
+    private fun doWhenOffline(todayAPODObj: APODDetail?) {
+        val apodOfflineList = CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
+        todayAPODObj?.let {
+            if (it.date == CommonUtils.getFormattedDate()) {
                 mainViewModel.apoDetailObs.set(it)
-            }
-            showOfflineAPODList()
-            if ((todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) ||
-                (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)
-                    ?.isEmpty() == true)
-            ) {
-                activity.snackbar(binding.root, getString(R.string.no_data_error))
+            } else {
+                activity.snackbar(binding.root, getString(R.string.no_data_for_today))
+                mainViewModel.apoDetailObs.set(null)
             }
         }
+        showOfflineAPODList()
+        if ((todayAPODObj == null && apodOfflineList == null) ||
+            (todayAPODObj == null && apodOfflineList
+                ?.isEmpty() == true)
+        ) {
+            activity.snackbar(binding.root, getString(R.string.no_data_error))
+        }
+    }
+
+    /**
+     * The doWhenOnline method, to manage (list and today's data) views when app is offline
+     */
+    private fun doWhenOnline(todayAPODObj: APODDetail?) {
+        todayAPODObj?.let {
+            if (it.date == CommonUtils.getFormattedDate()) {
+                mainViewModel.apoDetailObs.set(todayAPODObj)
+            } else {
+                callTodayAPODAPI()
+            }
+        } ?: callTodayAPODAPI()
+
+        showOfflineAPODList()
     }
 
     /**

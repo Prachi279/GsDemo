@@ -70,7 +70,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTitle"
@@ -247,8 +248,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:textColorHint="@color/text_color"
                         android:hint="@string/end_date"
+                        android:textColorHint="@color/text_color"
                         app:boxBackgroundMode="outline"
                         app:boxCornerRadiusBottomEnd="5dp"
                         app:boxCornerRadiusBottomStart="5dp"
