@@ -75,7 +75,7 @@ class APODListAdapter(private val mainViewModel: MainViewModel) :
     }
 
     /**
-     *The setAPODList method, to set apod list
+     *The getAPODList method, to get apod list
      */
     @JvmName("getAPODList")
     fun getAPODList(): List<APODDetail> {
