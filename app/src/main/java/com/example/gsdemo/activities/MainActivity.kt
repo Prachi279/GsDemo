@@ -112,7 +112,8 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.apoDetailObs.set(it)
             }
             showOfflineAPODList()
-            if (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) {
+            if ((todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) ||
+                (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST)?.isEmpty() == true)) {
                 activity.snackbar(binding.root, getString(R.string.no_data_error))
             }
         }
