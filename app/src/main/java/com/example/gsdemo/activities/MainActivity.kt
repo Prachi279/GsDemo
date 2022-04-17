@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.gsdemo.R
 import com.example.gsdemo.databinding.ActivityMainBinding
-import com.example.gsdemo.model.APODDetail
 import com.example.gsdemo.utils.APICallback
 import com.example.gsdemo.utils.AppConstants
 import com.example.gsdemo.utils.CommonUtils
@@ -18,7 +17,6 @@ import com.example.gsdemo.utils.snackbar
 import com.example.gsdemo.viewmodel.MainViewModel
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Response
 
 /**
  * The MainActivity class, to show today's image and filtered list based on date range
@@ -122,21 +120,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    /**
-     * The showError method, to show error message to the user
-     */
-    private fun showError(response: Any) {
-        val errorJson = JSONObject((response as ResponseBody).string())
-        var errorMessage: String? = ""
-        if (errorJson.has("error")) {
-            val jsonObj = JSONObject((errorJson.getString("error")).toString())
-            errorMessage = jsonObj.getString("message")
-        } else if (errorJson.has("msg")) {
-            errorMessage = errorJson.getString("msg")
-        }
-
     }
 
     /**
