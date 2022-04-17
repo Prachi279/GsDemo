@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/arial_mt"
                     android:text="@string/list_title"
@@ -164,7 +164,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:adapter="@{mainViewModel.getAPODListAdapter()}"
                     android:orientation="horizontal"
                     android:visibility="@{mainViewModel.isRangeListAvailable ? View.VISIBLE : View.GONE}"

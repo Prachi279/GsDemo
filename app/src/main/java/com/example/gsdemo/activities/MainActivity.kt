@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         setInitialData()
     }
+
     override fun onStop() {
         super.onStop()
         CommonUtils.saveObjIntoPref(
@@ -95,28 +96,36 @@ class MainActivity : AppCompatActivity() {
      * The setInitialData method, to show data based on online/offline condition
      */
     private fun setInitialData() {
+        val todayAPODObj = getTodayAPODData()
         if (CommonUtils.isOnline(activity)) {
-            mainViewModel.callTodayAPODAPI(object : APICallback {
-                override fun apiError(response: Any) {
-                    activity.snackbar(
-                        binding.root,
-                        getString(R.string.apod_fetch_image_error) + "" + CommonUtils.showError(
-                            response
-                        ).toString()
-                    )
+            if (todayAPODObj != null && todayAPODObj.date == CommonUtils.getFormattedDate()) {
+                when (todayAPODObj.date) {
+                    CommonUtils.getFormattedDate() -> {
+                        mainViewModel.apoDetailObs.set(todayAPODObj)
+                    }
                 }
-            })
+            } else {
+                mainViewModel.callTodayAPODAPI(object : APICallback {
+                    override fun apiError(response: Any) {
+                        activity.snackbar(
+                            binding.root,
+                            getString(R.string.apod_fetch_image_error) + "" + CommonUtils.showError(
+                                response
+                            ).toString()
+                        )
+                    }
+                })
+            }
+
             showOfflineAPODList()
         } else {
-            val data = getTodayAPODData()
-            data.let {
+            todayAPODObj.let {
                 mainViewModel.apoDetailObs.set(it)
             }
             showOfflineAPODList()
-            if (data == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) {
+            if (todayAPODObj == null && CommonUtils.getArrayListFromPref(AppConstants.APOD_LIST) == null) {
                 activity.snackbar(binding.root, getString(R.string.no_data_error))
             }
-
         }
     }
 

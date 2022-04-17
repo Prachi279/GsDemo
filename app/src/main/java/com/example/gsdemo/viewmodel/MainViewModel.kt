@@ -113,15 +113,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     isProgressDialogVisible.set(false)
                     if (response.isSuccessful) {
                         val apodRes = response.body()
-                        if (apodRes?.size!! > 0) {
-                            CommonUtils.saveObjIntoPref(apodRes, AppConstants.APOD_LIST)
-                            notifyDataChange(apodRes)
-                        } else {
-                            isRangeListAvailable.set(false)
-                        }
-
+                        CommonUtils.saveObjIntoPref(apodRes, AppConstants.APOD_LIST)
+                        notifyDataChange(apodRes)
                     } else {
-                        isRangeListAvailable.set(false)
+                        notifyDataChange()
                         view.context.snackbar(
                             view,
                             CommonUtils.showError(response.errorBody()!!).toString()
