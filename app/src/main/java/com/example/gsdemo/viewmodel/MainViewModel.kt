@@ -217,10 +217,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 } else {
                     isRangeListAvailable.set(false)
                 }
-            }
-        if (rangeList == null) {
-            isRangeListAvailable.set(false)
-        }
+            }?: isRangeListAvailable.set(false)
     }
 
 }

@@ -98,24 +98,13 @@ class MainActivity : AppCompatActivity() {
     private fun setInitialData() {
         val todayAPODObj = getTodayAPODData()
         if (CommonUtils.isOnline(activity)) {
-            if (todayAPODObj != null && todayAPODObj.date == CommonUtils.getFormattedDate()) {
-                when (todayAPODObj.date) {
-                    CommonUtils.getFormattedDate() -> {
-                        mainViewModel.apoDetailObs.set(todayAPODObj)
-                    }
+            todayAPODObj?.let {
+                if (it.date == CommonUtils.getFormattedDate()) {
+                    mainViewModel.apoDetailObs.set(todayAPODObj)
+                } else {
+                    callTodayAPODAPI()
                 }
-            } else {
-                mainViewModel.callTodayAPODAPI(object : APICallback {
-                    override fun apiError(response: Any) {
-                        activity.snackbar(
-                            binding.root,
-                            getString(R.string.apod_fetch_image_error) + "" + CommonUtils.showError(
-                                response
-                            ).toString()
-                        )
-                    }
-                })
-            }
+            } ?: callTodayAPODAPI()
 
             showOfflineAPODList()
         } else {
@@ -127,6 +116,22 @@ class MainActivity : AppCompatActivity() {
                 activity.snackbar(binding.root, getString(R.string.no_data_error))
             }
         }
+    }
+
+    /**
+     * The callTodayAPODAPI method, to get today's apod data
+     */
+    private fun callTodayAPODAPI() {
+        mainViewModel.callTodayAPODAPI(object : APICallback {
+            override fun apiError(response: Any) {
+                activity.snackbar(
+                    binding.root,
+                    getString(R.string.apod_fetch_image_error) + "" + CommonUtils.showError(
+                        response
+                    ).toString()
+                )
+            }
+        })
     }
 
     /**
